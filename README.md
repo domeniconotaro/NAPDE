@@ -15,6 +15,8 @@ A finite element solver written in [*FreeFem++*](http://www.freefem.org/) (versi
 
 It simulates the Darcy flow in porous media (see `report.pdf` for mathematical details).
 
+Different finite element methods are provided, both in primal and mixed form.
+
 --------------------------------------------------------
 ## The Code
 The package is organized as follows:
