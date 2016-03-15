@@ -11,7 +11,7 @@
 
 -------------------------------------------------------
 
-A finite element solver written in [*FreeFem++*](http://www.freefem.org/).
+A finite element solver written in [*FreeFem++*](http://www.freefem.org/) (version 3.45, Ubuntu 14.04).
 
 It simulates the Darcy flow in porous media (see `report.pdf` for mathematical details).
 
