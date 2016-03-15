@@ -6,6 +6,8 @@
 
 **Mailto** : <domenico.not@gmail.com>
 
+**Date  ** : March 2016
+
 -------------------------------------------------------
 
 A finite element solver written in [*FreeFem++*](http://www.freefem.org/) (version 3.45, Ubuntu 14.04).
