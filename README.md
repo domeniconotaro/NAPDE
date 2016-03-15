@@ -1,9 +1,6 @@
 # Comparison Results of Primal and Mixed Finite Element Methods for the Darcy problem 
 ### NUMERICAL ANALYSIS FOR PARTIAL DIFFERENTIAL EQUATIONS 
 #### *Politecnico di Milano* (ITALY)
-**Prof.**  : Simona Perotto
-
-**A.Y.**   : 2014-2015
 
 **Author** : Domenico Notaro (ID 10332103)
 
