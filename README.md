@@ -1,4 +1,4 @@
-# Mixed Finite Element Methods for the Darcy's problem 
+# Comparison Results of Mixed Finite Element Methods for the Darcy problem 
 ## NUMERICAL ANALYSIS FOR PARTIAL DIFFERENTIAL EQUATIONS 
 ### *Politecnico di Milano* (ITALY)
 **Prof.**  : Simona Perotto
