@@ -13,7 +13,7 @@
 
 A finite element solver written in [*FreeFem++*](http://www.freefem.org/).
 
-It simulates the Darcy flow in a porous medium occupying a region \begin{equation}\Omega\subset\end{equation}
+It simulates the Darcy flow in a porous medium occupying a region `math \Omega `
 
 The package is organized as follows:
 
