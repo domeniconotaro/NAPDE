@@ -13,9 +13,10 @@
 
 A finite element solver written in [*FreeFem++*](http://www.freefem.org/).
 
-It simulates the Darcy flow in a porous medium occupying a region `` $\Omega$ ``
+It simulates the Darcy flow in porous media (see `report.pdf` for mathematical details).
 
-The package is organized as follows:
+--------------------------------------------------------
+# The package
 
 - `assembling.edp` : 
 - `fem.edp`        :
@@ -24,3 +25,7 @@ The package is organized as follows:
 - `mesh.edp`       :
 
 --------------------------------------------------------
+# Execution
+``` 
+$ FreeFem++ main.edp
+``` 
