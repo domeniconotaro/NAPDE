@@ -1,0 +1,44 @@
+// *****************************************************************************
+//  FILE        : fem.edp
+//  DESCRIPTION : finite element methods for Darcy
+//  AUTHOR      : D. Notaro <domenico.not@gmail.com>
+// *****************************************************************************
+
+//
+//  Header files
+// ______________________________________
+load "Element_Mixte"                     // implementation of BDM1, RT1
+include "mesh.edp"                       // domain triangulation
+//
+//  Primal FE spaces and functions
+// ______________________________________
+/* Conforming linear Courant (P1) */
+fespace Vh(Th,P1), VVh(Th,[P0,P0]);
+/* Non-conforming Crouzeix-Raviart (CR) */
+//fespace Vh(Th,P1nc), VVh(Th,[P0,P0]);
+/* Conforming quadratic Courant (P2) */
+//fespace Vh(Th,P2), VVh(Th,[P1dc,P1dc]);
+/* Pressure trial and test functions */
+Vh pp,qp;     
+/* Velocity trial functions */                          
+VVh [up1,up2];
+/* Primal dimensions */
+real dimVh = Vh.ndof;
+real dimVVh = VVh.ndof;
+//
+//   Mixed FE spaces and functions
+// ______________________________________
+/* Lowest-order Raviart-Thomas (RT0) */
+fespace Wh(Th,RT0),Qh(Th,P0),Ih(Th,[P1,P1]);
+/* Lowest-order Brezzi-Douglas-Marini (BDM1) */
+//fespace Wh(Th,BDM1),Qh(Th,P0),Ih(Th,BDM1);
+/* First-order  Raviart-Thomas (RT1) */ 
+//fespace Wh(Th,RT1),Qh(Th,P1dc),Ih(Th,RT1);
+/* Velocity trial and test functions */                          
+Wh [u1,u2],[v1,v2];
+/* Pressure trial and test functions */
+Qh p,q;
+/* Mixed dimensions */
+real dimWh = Wh.ndof;
+real dimQh = Qh.ndof;
+real dimTot = dimWh+dimQh;

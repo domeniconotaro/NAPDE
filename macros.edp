@@ -1,0 +1,21 @@
+// *****************************************************************************
+//  FILE        : macros.edp
+//  DESCRIPTION : definition of useful macros for Darcy
+//  AUTHOR      : D. Notaro <domenico.not@gmail.com>
+// *****************************************************************************
+//
+//  Gradient of a scalar function
+// _______________________________
+macro Grad(u) [dx(u), dy(u)] //EOM
+//
+//  Divergence of a vec function
+// _______________________________
+macro Div(u1,u2) ( dx(u1) + dy(u2) ) //EOM
+//
+//  Magnitude of a vec function
+// _______________________________
+macro Magnitude(u1,u2) ( sqrt( u1^2 + u2^2 ) ) //EOM
+//macro L2norm(T,u) ( sqrt(int2d(T)( u^2 ) ) //EOM
+//macro H1norm(T,u) ( sqrt(int2d(T)( dx(u)^2 + dy(u)^2 ) ) //EOM
+//macro L2normvec(T,u1,u2) ( sqrt(int2d(T)( u1^2 + u2^2 ) ) //EOM
+//macro H1normvec(T,u1,u2) ( sqrt(int2d(T)( dx(u1)^2 + dy(u1)^2 + dx(u2)^2 + dy(u2)^2 ) ) //EOM

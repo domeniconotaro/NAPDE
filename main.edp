@@ -1,0 +1,120 @@
+// *****************************************************************************
+//  FILE        : main.edp
+//  DESCRIPTION : solve Darcy problem in primal and mixed form 
+//  AUTHOR      : D. Notaro <domenico.not@gmail.com>
+// *****************************************************************************
+//
+//  Header files
+// ______________________________________
+include "macros.edp"                     // definition of Grad, Div, ...
+include "assembling.edp"                 // primal and mixed problems
+//
+//  Output flags
+// ______________________________________
+bool PLOT   = true;                      // do/do not plot solutions
+bool EXPORT = false;                     // do/do not export solutions
+bool ERROR  = true;                      // do/do not compute the errors
+//
+//  Primal solution
+// ______________________________________
+/* Compute pressure and velocity */
+real start = clock();
+primalDarcy;
+real cpup = clock()-start;
+[up1,up2] = [-kappa*dx(pp),-kappa*dy(pp)];
+/* Export results */
+if (EXPORT) {
+ofstream solp("primal_solution");
+solp << "up1 : " << up1[] << endl 
+	  << "up2 : " << up2[] << endl
+	  << "pp  : " << pp[]  << endl;
+}
+/* Compute velocity div and magnitude */
+Qh divup = Div(up1,up2);
+Qh ump   = Magnitude(up1,up2);
+//
+//  Mixed solution
+// ______________________________________
+/* Compute pressure and velocity */
+start = clock();
+//mixedDarcy;
+LinearGMRES(MatVec, UM, FM, nbiter=10000, eps=TOL, precon=BlockDiag);
+real cpum = clock()-start;
+verbosity = 2;
+u1[] = UM(0:dimWh-1);
+p[]  = UM(dimWh:dimTot-1);
+/* Export results */
+if (EXPORT) {
+ofstream solm("mixed_solution");
+solm << UM << endl;
+}
+/* Interpole on Pk for postprocessing (needed for RT0) */
+Ih [u1int, u2int] = [u1,u2];
+/* Compute velocity div and magnitude */
+Qh divu = Div(u1,u2);
+Qh um   = Magnitude(u1,u2);
+//
+//  Solving report
+// ______________________________________
+cout << "==============================" << endl;
+cout << " primal dof : " << dimVh        << endl;
+cout << " primal CPU : " << cpup << "s"  << endl;
+cout << " mixed  dof : " << dimTot       << endl;
+cout << " mixed  CPU : " << cpum << "s"  << endl;
+cout << "==============================" << endl;
+//
+//  Visual comparison
+// ______________________________________
+if (PLOT) {
+/*  Zoom box [(xmin,ymin),(xmax,ymax)] */
+func zoom = [ 
+    [ -0.1, -0.2 ], 
+    [  1.2,  1.1 ] ];
+/* Primal */
+plot (pp,[up1,up2],wait=1,value=1,fill=1,dim=2,coef=0.01,bb=zoom,
+	ps=savedir+prefix+"primal.png",cmm="Primal Solution");
+plot (pp, wait=1,value=1,fill=1,dim=3,bb=zoom,
+	ps=savedir+prefix+"pp.png",cmm="Primal Pressure");
+plot (up1,wait=1,value=1,fill=1,dim=3,bb=zoom,
+	ps=savedir+prefix+"u1p.png",cmm="Primal X Velocity");
+plot (up2,wait=1,value=1,fill=1,dim=3,bb=zoom,
+	ps=savedir+prefix+"u2p.png",cmm="Primal Y Velocity");
+plot (ump,wait=1,value=1,fill=1,dim=3,bb=zoom,
+	ps=savedir+prefix+"ump.png",cmm="Primal Abs Velocity");
+plot (divup,wait=1,value=1,fill=1,dim=3,bb=zoom,
+	ps=savedir+prefix+"divup.png",cmm="Primal Velocity Div");
+/* Mixed */
+plot (p,[u1int,u2int],wait=1,value=1,fill=1,dim=2,coef=0.01,bb=zoom,
+	ps=savedir+prefix+"mixed.png",cmm="Mixed Solution");
+plot (p, wait=1,value=1,fill=1,dim=3,bb=zoom,
+	ps=savedir+prefix+"p.png",cmm="Mixed Pressure");
+plot (u1int,wait=1,value=1,fill=1,dim=3,bb=zoom,
+	ps=savedir+prefix+"u1.png",cmm="Mixed X Velocity");
+plot (u2int,wait=1,value=1,fill=1,dim=3,bb=zoom,
+	ps=savedir+prefix+"u2.png",cmm="Mixed Y Velocity");
+plot (um,wait=1,value=1,fill=1,dim=3,bb=zoom,
+	ps=savedir+prefix+"um.png",cmm="Mixed Abs Velocity");
+plot (divu,wait=1,value=1,fill=1,dim=3,bb=zoom,
+	ps=savedir+prefix+"divu.png",cmm="Mixed Velocity Div");
+}
+//
+//  Error report
+// ______________________________________
+if (ERROR) {
+real errppL2  = int2d(Th)(abs(pp-pe)^2);
+real errppH1  = errppL2 + int2d(Th)(abs(dx(pp)-pedx)^2 + abs(dy(pp)-pedy)^2);
+real errupL2  = int2d(Th)(abs(up1-ue1)^2 + abs(up2-ue2)^2); 
+real errpL2   = int2d(Th)(abs(p-pe)^2);
+real erruL2   = int2d(Th)(abs(u1int-ue1)^2 + abs(u2int-ue2)^2);
+real erruHdiv = erruL2 + int2d(Th)(abs(dx(u1)-ue1dx + dy(u2)-ue2dy)^2);
+cout << "==============================" << endl;
+cout << "   L2 error - primal          " << endl;
+cout << " ||p - ph||_0 = " << sqrt(errppL2)  << endl;
+cout << " ||p - ph||_1 = " << sqrt(errppH1)  << endl;
+cout << " ||u - uh||_0 = " << sqrt(errupL2)  << endl;
+cout << "   L2 error - mixed           " << endl;
+cout << " ||p - ph||_0 = " << sqrt(errpL2)   << endl;
+cout << " ||u - uh||_0 = " << sqrt(erruL2)   << endl;
+cout << " ||u - uh||_div = " << sqrt(erruHdiv)   << endl;
+cout << "==============================" << endl;
+}

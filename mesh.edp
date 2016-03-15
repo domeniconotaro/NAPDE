@@ -1,0 +1,36 @@
+// *****************************************************************************
+//  FILE        : mesh.edp
+//  DESCRIPTION : generate the desired mesh for Darcy
+//  AUTHOR      : D. Notaro <domenico.not@gmail.com>
+// *****************************************************************************
+//
+//  Aux variables
+// ______________________________________
+string savedir = "./results/";           // output directory
+string prefix  = "darcy_N=10_";          // problem prefix used in output
+bool REGULAR = false;                    // regular/arbitrary triangulation
+//
+//  Boundary definition
+// ______________________________________
+border l0(t=0,1) { x = t ;  y = 0;   label = 1;}
+border l1(t=0,1) { x = 1;   y = t;   label = 2;}
+border l2(t=0,1) { x = 1-t; y = 1;   label = 2;}
+border l3(t=0,1) { x = 0;   y = 1-t; label = 4;}
+//
+//  Geometry definition
+// ______________________________________
+int nbdiv = 10;
+func geom = l0(nbdiv)+l1(nbdiv)+l2(nbdiv)+l3(nbdiv);
+plot(geom,wait=1,ps=savedir+prefix+"geom.eps",cmm="geom");
+//
+//  Mesh generation
+// ______________________________________
+mesh Th;
+if (REGULAR)
+	Th = square(nbdiv,nbdiv);
+else
+	Th = buildmesh(geom);
+//
+//  Visualization
+// ______________________________________
+plot(Th,wait=1,ps=savedir+prefix+"mesh.eps",cmm="Mesh");

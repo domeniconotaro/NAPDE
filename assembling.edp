@@ -1,0 +1,89 @@
+// *****************************************************************************
+//  FILE        : assembling.edp
+//  DESCRIPTION : definition of the primal and mixed variational problems 
+//  AUTHOR      : D. Notaro <domenico.not@gmail.com>
+// *****************************************************************************
+//
+//  Header files
+// ______________________________________
+include "fem.edp"                        // definition of FE spaces and functions
+//
+//  Aux variables
+// ______________________________________
+real TOL = 1.e-08;                       // max tolerance for iterative solver
+bool PRECOND = false;                    // do/do not precond the system
+//
+//  Data
+// ______________________________________
+/* Medium permeability */
+real kappa = 1.;
+/* Divergence source */
+func f = 8*pi*pi*kappa*sin(2*pi*x)*sin(2*pi*y);
+Qh fh = f;
+/* Boundary data */
+func g = 0.;
+/* Exact pressure */
+func pe   = sin(2*pi*x)*sin(2*pi*y);
+func pedx = 2*pi*cos(2*pi*x)*sin(2*pi*y);
+func pedy = 2*pi*sin(2*pi*x)*cos(2*pi*y);
+/* Exact velocity */
+func ue1 = -2*pi*kappa*cos(2*pi*x)*sin(2*pi*y);
+func ue2 = -2*pi*kappa*sin(2*pi*x)*cos(2*pi*y);
+func ue1dx = 4*pi*pi*kappa*sin(2*pi*x)*sin(2*pi*y);
+func ue2dy = 4*pi*pi*kappa*sin(2*pi*x)*sin(2*pi*y);
+//
+//  Primal problem definition
+// ______________________________________
+problem primalDarcy(pp,qp,solver=CG,eps=-TOL) =
+     int2d(Th) ( dx(pp)*dx(qp) + dy(pp)*dy(qp) ) 
+	- int2d(Th) ( f*qp )
+	+ on ( 1,2,3,4, pp=g );
+//
+//  Mixed problem definition
+// ______________________________________
+/* Variational forms */
+varf a([u1,u2],[v1,v2]) = 
+	int2d(Th) ( 1./kappa*u1*v1 + 1./kappa*u2*v2 );
+varf b([u1,u2],[q]) = 
+	int2d(Th) ( (dx(u1) + dy(u2))*q ) ;
+varf bt([p],[v1,v2]) = 
+	int2d(Th) ( -p*(dx(v1) + dy(v2)) ) ;
+varf rhs(p,q) = 
+	int2d(Th) ( fh*q );
+/* Matrices */	
+matrix A = a(Wh,Wh);
+matrix B = b(Wh,Qh);
+matrix Bt = bt(Qh,Wh);
+matrix AM = [[A,Bt],[B,0]];
+set(AM,solver=GMRES);
+real[int] FM(dimTot);
+FM(dimWh:dimTot-1) = rhs(0,Qh);
+real[int] UM(dimTot);
+/* Block preconditioner */
+matrix PM;
+if (PRECOND) {
+varf masspres(p,q) = int2d(Th) ( p*q );
+matrix MP = masspres(Qh,Qh);
+PM = [[A,0],[0,MP]];
+set(PM,solver=UMFPACK);
+}
+else {
+real[int] one(dimTot); one = 1.;
+PM = one;
+set(PM,solver=UMFPACK);
+}
+/* Residual computation */
+real[int] R(dimTot); 
+func real[int] BlockDiag(real[int] &xx){
+  verbosity=1;
+  R=PM^-1*xx;
+  verbosity=3;
+  return R;
+}
+int i=0;
+func real[int] MatVec(real[int] &xx){
+  R=AM*xx;
+  i++;
+  if (i%50==0) cout<<"GMRES: iter "<< i <<endl;
+  return R;
+}
