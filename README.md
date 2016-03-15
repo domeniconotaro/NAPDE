@@ -8,7 +8,14 @@ Mailto : <domenico.not@gmail.com>
 
 A.Y.   : 2014-2015
 
+-------------------------------------------------------
 
 A mixed finite element solver written in FreeFem++.
-It solves the Darcy's problem for a porous medium $\Omega$
-$\mathbf{u} = -\mathbb{K}\,\nabla p$
+
+The package is organized as follows:
+
+- assembling.edp :
+- fem.edp        :
+- macros.edp     :
+- main.edp       :
+- mesh.edp       :
