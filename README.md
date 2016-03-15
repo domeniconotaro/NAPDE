@@ -1,12 +1,12 @@
 # NUMERICAL ANALYSIS FOR PARTIAL DIFFERENTIAL EQUATIONS 
 # Mixed Finite Element Methods for the Darcy's problem 
-Prof.  : Simona Perotto
+Institution &: Politecnico di Milano (ITALY)
 
-Author : Domenico Notaro (ID 10332103)
+Author &: Domenico Notaro (ID 10332103)
 
-Mailto : <domenico.not@gmail.com>
+Mailto &: <domenico.not@gmail.com>
 
-A.Y.   : 2014-2015
+A.Y.   &: 2014-2015
 
 -------------------------------------------------------
 
