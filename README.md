@@ -27,10 +27,9 @@ It simulates the Darcy flow in porous media (see `report.pdf` for mathematical d
 --------------------------------------------------------
 ## Execution
 Before running the main program you have to set the desired framework.
-1. Define a computational mesh in `mesh.edp`
-   1.1 set the number of subdivisions
-2. Select the FE approximation in `fem.edp` 
-   2.1 Uncomment the desired method (Lagrange, Croizeuix-Raviart, Raviart-Thomas, ...) 
+
+1. Define a computational mesh in `mesh.edp` (number of subdivision)
+2. Select the FE approximation in `fem.edp` (Lagrange, Croizeuix-Raviart, Raviart-Thomas, ...) 
 3. Run the program
 ``` 
 $ FreeFem++ main.edp
