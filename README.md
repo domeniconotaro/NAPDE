@@ -16,13 +16,14 @@ A finite element solver written in [*FreeFem++*](http://www.freefem.org/).
 It simulates the Darcy flow in porous media (see `report.pdf` for mathematical details).
 
 --------------------------------------------------------
-## Code organization
+## The Code
+The package is organized as follows:
 
-- `assembling.edp` : 
-- `fem.edp`        :
-- `macros.edp`     :
-- `main.edp`       :
-- `mesh.edp`       :
+- `assembling.edp` : definition of the primal and mixed variational problems
+- `fem.edp`        : list of available finite element methods
+- `macros.edp`     : definition of useful macros
+- `main.edp`       : main program to compare the primal and mixed solutions
+- `mesh.edp`       : generatation of the computational mesh
 
 --------------------------------------------------------
 ## Execution
