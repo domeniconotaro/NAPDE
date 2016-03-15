@@ -16,7 +16,7 @@ A finite element solver written in [*FreeFem++*](http://www.freefem.org/).
 It simulates the Darcy flow in porous media (see `report.pdf` for mathematical details).
 
 --------------------------------------------------------
-# The package
+## Code organization
 
 - `assembling.edp` : 
 - `fem.edp`        :
@@ -25,7 +25,13 @@ It simulates the Darcy flow in porous media (see `report.pdf` for mathematical d
 - `mesh.edp`       :
 
 --------------------------------------------------------
-# Execution
+## Execution
+Before running the main program you have to set the desired framework.
+1. Define a computational mesh in `mesh.edp`
+-> set the number of subdivisions
+2. Select the FE approximation in `fem.edp` 
+-> Uncomment the desired method (Lagrange, Croizeuix-Raviart, Raviart-Thomas, ...) 
+3. Run the program
 ``` 
 $ FreeFem++ main.edp
 ``` 
