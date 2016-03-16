@@ -1,6 +1,6 @@
 // *****************************************************************************
 //  FILE        : main.edp
-//  DESCRIPTION : solve Darcy problem in primal and mixed form 
+//  DESCRIPTION : main program to compare the primal and mixed solutions 
 //  AUTHOR      : D. Notaro <domenico.not@gmail.com>
 // *****************************************************************************
 //
@@ -11,7 +11,8 @@ include "assembling.edp"                 // primal and mixed problems
 //
 //  Output flags
 // ______________________________________
-bool PLOT   = true;                      // do/do not plot solutions
+bool PLOT   = false;                     // do/do not plot solutions
+bool EXACT  = false;                     // do/do not plot ex solutions
 bool EXPORT = false;                     // do/do not export solutions
 bool ERROR  = true;                      // do/do not compute the errors
 //
@@ -65,36 +66,58 @@ cout << "==============================" << endl;
 //
 //  Visual comparison
 // ______________________________________
-if (PLOT) {
 /*  Zoom box [(xmin,ymin),(xmax,ymax)] */
-func zoom = [ 
+func zoom2d = [ 
     [ -0.1, -0.2 ], 
     [  1.2,  1.1 ] ];
+func zoom3d = [ 
+    [ 0.1, 0.2 ], 
+    [ 0.9, 1.0 ] ];
+//* Exact */
+if (EXACT) {
+fespace Ph(Th, P2);
+Ph peh = pe;
+Ph ue1h = ue1;
+Ph ue2h = ue2;
+Ph umeh = Magnitude(ue1, ue2);
+Ph ffh = f;
+plot (peh, wait=1,value=1,fill=1,dim=3,bb=zoom3d,
+	ps=savedir+prefix+"pe.png",cmm="Exact Pressure");
+plot (ue1h,wait=1,value=1,fill=1,dim=3,bb=zoom3d,
+	ps=savedir+prefix+"u1e.png",cmm="Exact X Velocity");
+plot (ue2h,wait=1,value=1,fill=1,dim=3,bb=zoom3d,
+	ps=savedir+prefix+"u2e.png",cmm="Exact Y Velocity");
+plot (umeh,wait=1,value=1,fill=1,dim=3,bb=zoom3d,
+	ps=savedir+prefix+"ume.png",cmm="Exact Abs Velocity");
+plot (ffh,wait=1,value=1,fill=1,dim=3,bb=zoom3d,
+	ps=savedir+prefix+"f.png",cmm="Exact Div Velocity");
+}
+if (PLOT) {
 /* Primal */
-plot (pp,[up1,up2],wait=1,value=1,fill=1,dim=2,coef=0.01,bb=zoom,
+plot (pp,[up1,up2],wait=1,value=1,fill=1,dim=2,coef=0.01,bb=zoom2d,
 	ps=savedir+prefix+"primal.png",cmm="Primal Solution");
-plot (pp, wait=1,value=1,fill=1,dim=3,bb=zoom,
+plot (pp, wait=1,value=1,fill=1,dim=3,bb=zoom3d,
 	ps=savedir+prefix+"pp.png",cmm="Primal Pressure");
-plot (up1,wait=1,value=1,fill=1,dim=3,bb=zoom,
+plot (up1,wait=1,value=1,fill=1,dim=3,bb=zoom3d,
 	ps=savedir+prefix+"u1p.png",cmm="Primal X Velocity");
-plot (up2,wait=1,value=1,fill=1,dim=3,bb=zoom,
+plot (up2,wait=1,value=1,fill=1,dim=3,bb=zoom3d,
 	ps=savedir+prefix+"u2p.png",cmm="Primal Y Velocity");
-plot (ump,wait=1,value=1,fill=1,dim=3,bb=zoom,
+plot (ump,wait=1,value=1,fill=1,dim=3,bb=zoom3d,
 	ps=savedir+prefix+"ump.png",cmm="Primal Abs Velocity");
-plot (divup,wait=1,value=1,fill=1,dim=3,bb=zoom,
+plot (divup,wait=1,value=1,fill=1,dim=3,bb=zoom3d,
 	ps=savedir+prefix+"divup.png",cmm="Primal Velocity Div");
 /* Mixed */
-plot (p,[u1int,u2int],wait=1,value=1,fill=1,dim=2,coef=0.01,bb=zoom,
+plot (p,[u1int,u2int],wait=1,value=1,fill=1,dim=2,coef=0.01,bb=zoom2d,
 	ps=savedir+prefix+"mixed.png",cmm="Mixed Solution");
-plot (p, wait=1,value=1,fill=1,dim=3,bb=zoom,
+plot (p, wait=1,value=1,fill=1,dim=3,bb=zoom3d,
 	ps=savedir+prefix+"p.png",cmm="Mixed Pressure");
-plot (u1int,wait=1,value=1,fill=1,dim=3,bb=zoom,
+plot (u1int,wait=1,value=1,fill=1,dim=3,bb=zoom3d,
 	ps=savedir+prefix+"u1.png",cmm="Mixed X Velocity");
-plot (u2int,wait=1,value=1,fill=1,dim=3,bb=zoom,
+plot (u2int,wait=1,value=1,fill=1,dim=3,bb=zoom3d,
 	ps=savedir+prefix+"u2.png",cmm="Mixed Y Velocity");
-plot (um,wait=1,value=1,fill=1,dim=3,bb=zoom,
+plot (um,wait=1,value=1,fill=1,dim=3,bb=zoom3d,
 	ps=savedir+prefix+"um.png",cmm="Mixed Abs Velocity");
-plot (divu,wait=1,value=1,fill=1,dim=3,bb=zoom,
+plot (divu,wait=1,value=1,fill=1,dim=3,bb=zoom3d,
 	ps=savedir+prefix+"divu.png",cmm="Mixed Velocity Div");
 }
 //

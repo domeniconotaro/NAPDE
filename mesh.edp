@@ -1,14 +1,14 @@
 // *****************************************************************************
 //  FILE        : mesh.edp
-//  DESCRIPTION : generate the desired mesh for Darcy
+//  DESCRIPTION : generatation of the computational mesh
 //  AUTHOR      : D. Notaro <domenico.not@gmail.com>
 // *****************************************************************************
 //
 //  Aux variables
 // ______________________________________
 string savedir = "./results/";           // output directory
-string prefix  = "darcy_N=10_";          // problem prefix used in output
-bool REGULAR = false;                    // regular/arbitrary triangulation
+string prefix  = "darcy_N=30_";          // problem prefix used in output
+bool REGULAR = true;                     // regular/arbitrary triangulation
 //
 //  Boundary definition
 // ______________________________________
@@ -19,7 +19,7 @@ border l3(t=0,1) { x = 0;   y = 1-t; label = 4;}
 //
 //  Geometry definition
 // ______________________________________
-int nbdiv = 10;
+int nbdiv = 80;
 func geom = l0(nbdiv)+l1(nbdiv)+l2(nbdiv)+l3(nbdiv);
 plot(geom,wait=1,ps=savedir+prefix+"geom.eps",cmm="geom");
 //

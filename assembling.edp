@@ -10,7 +10,7 @@ include "fem.edp"                        // definition of FE spaces and function
 //
 //  Aux variables
 // ______________________________________
-real TOL = 1.e-08;                       // max tolerance for iterative solver
+real TOL     = 1.e-08;                   // max tolerance for iterative solver
 bool PRECOND = false;                    // do/do not precond the system
 //
 //  Data
